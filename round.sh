@@ -8,5 +8,5 @@ cat tournament$1_games2.res >> tournament.log
 echo
 echo >> tournament.log
 
-./book_learning.py --pgn_filename tournament$1_games2.pgn --name "$NAME" --engine_log tournament$1_games2_eval.log --log tournament.log --external_evaluations evaluations_everything.lst --book_dict book_dict$1.dat
+./book_learning.py --pgn tournament$1_games2.pgn --name "$NAME" --engine_log tournament$1_games2_eval.log --log tournament.log --external_evaluations evaluations_everything.lst --book_dict book_dict$1.dat
 ./book_line.py book_dict$1.dat
