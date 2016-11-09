@@ -5,8 +5,8 @@ import chess.pgn
 from chess_utils import *
 
 class Engine:
-    def __init__(self, log_filename, syzygy_path):
-        self.engine = subprocess.Popen(["/usr/local/bin/stockfish"], bufsize=1, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+    def __init__(self, engine_executable, log_filename, syzygy_path):
+        self.engine = subprocess.Popen([engine_executable], bufsize=1, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
         if log_filename:
             self.log_out = open(log_filename, "a")
         else:
@@ -64,6 +64,7 @@ def analyse_pgn(pgn_name,
                 engine_id,
                 evaluations_filename,
                 external_evaluations_filename,
+                engine_executable,
                 syzygy_path,
                 engine_log_filename,
                 game_log_filename):
@@ -80,7 +81,7 @@ def analyse_pgn(pgn_name,
             len(existing_evaluations), evaluations_filename))
     else:
         existing_evaluations = {}
-    engine = Engine(engine_log_filename, syzygy_path)
+    engine = Engine(engine_executable, engine_log_filename, syzygy_path)
     eval_out = open(evaluations_filename, "a")
     game_log_out = open(game_log_filename, "a")
     eval_start_pos = eval_out.tell()
