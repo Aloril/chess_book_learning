@@ -99,12 +99,12 @@ def analyse_pgn(pgn_name,
         white = game.headers["White"]
         black = game.headers["Black"]
         result = game.headers["Result"]
-        analyse_colour = None
-        if white.find(engine_id)>=0:
-            analyse_colour = chess.WHITE
-        elif black.find(engine_id)>=0:
-            analyse_colour = chess.BLACK
-        if analyse_colour==None:
+        analyse_colours = []
+        if white==engine_id:
+            analyse_colours.append(chess.WHITE)
+        if black.find(engine_id)>=0:
+            analyse_colours.append(chess.BLACK)
+        if not analyse_colours:
             continue
         count += 1
         print_log("%i: %s-%s %s" % (count, white, black, result))
@@ -113,7 +113,7 @@ def analyse_pgn(pgn_name,
         while True:
             best_move = None
             all_new = True
-            if b.turn==analyse_colour:
+            if b.turn in analyse_colours:
                 best_score = -INFINITE_SCORE
                 ttable_count = everything_count = eval_count = 0
                 #print(b.fen(), " ".join(map(str, b.move_stack)))
@@ -169,7 +169,9 @@ def analyse_pgn(pgn_name,
                 break
             b.push(move)
             variation = variation[0].variations
-        colour_str = {chess.WHITE:"w", chess.BLACK:"b"}[analyse_colour]
+        colour_str = ""
+        for colour in analyse_colours:
+            colour_str += {chess.WHITE:"w", chess.BLACK:"b"}[colour]
         game_log_out.write("%s %s\n" % (colour_str, " ".join(map(str, b.move_stack))))
         game_log_out.flush()
         game_log_lines += 1

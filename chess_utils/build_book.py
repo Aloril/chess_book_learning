@@ -52,7 +52,7 @@ def build_book(evaluations_filename, game_log_filename, book_dict_filename):
         move_lst = line.strip().split()
         b = chess.Board()
         for move in move_lst:
-            if len(move) > 1: #first entry is colour, but ignore it and analyse opening position
+            if len(move) >= 4: #first entry is colour, but ignore it and analyse opening position
                 b.push_uci(move)
             key1 = fen2key(b.fen())
             if key1 not in link_dict:

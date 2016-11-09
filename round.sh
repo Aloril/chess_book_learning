@@ -4,7 +4,7 @@ cutechess-cli -debug -fcp name="$NAME" cmd=stockfish book=book_learning.bin prot
 cat tournament$1_games2.log|grep -v "<"|grep -v ">" > tournament$1_games2.res
 cat tournament$1_games2.res
 cat tournament$1_games2.res >> tournament.log
-./result_summary.py
+./result_summary.py tournament%i_games2.res
 echo
 echo >> tournament.log
 

@@ -3,12 +3,13 @@ import sys, os, re
 import chess_utils
 
 if __name__=="__main__":
+    filename_fmt = sys.argv[1]
     chess_utils.log_fp = open("tournament.log", "a")
     print_log = chess_utils.print_log
     i = 1
     total_win = total_lost = total_draw = 0
     while True:
-        filename = "tournament%i_games2.res" % i
+        filename = filename_fmt % i
         if not os.path.exists(filename):
             break
         win, lost, draw = 0, 0, 0
