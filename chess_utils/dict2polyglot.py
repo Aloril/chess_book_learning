@@ -26,11 +26,15 @@ def dict2polyglot(book_dict, book_filename):
                 move_raw |= (move.promotion-1) << 12
             book_lst.append((zhash, move_raw, score))
     book_lst.sort()
+    count = 0
     with open(book_filename, "wb") as fp:
         for zhash, move, score in book_lst:
             weight = 1
             learn = score
             fp.write(ENTRY_STRUCT.pack(zhash, move, weight, learn))
+            count += 1
+    print_log("%i entries in dictionary, added %i complete entries to polyglot book %s" % (
+        len(book_dict), count, book_filename))
     if 0:
         pg = chess.polyglot.open_reader(book_filename)
         for key in book_dict:

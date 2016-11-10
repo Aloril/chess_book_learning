@@ -10,9 +10,6 @@ def add_link(link_dict, move, pos1, pos2):
 #debug_b = chess.Board()
 def minmax(existing_evaluations, book_dict, link_dict, key, move_history):
     #global debug_b
-    if key in move_history:
-        return
-    move_history.add(key)
     if key in book_dict:
         return book_dict[key]
     if key not in link_dict:
@@ -20,6 +17,9 @@ def minmax(existing_evaluations, book_dict, link_dict, key, move_history):
             fen, score_type, score, pv = existing_evaluations[key]
             return score2no(score_type, score), None, False
         return None
+    if key in move_history:
+        return
+    move_history.add(key)
     d = link_dict[key]
     best_score = -INFINITE_SCORE
     best_move = None

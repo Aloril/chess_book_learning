@@ -1,7 +1,7 @@
 Chess book learning for any chess engine or human.
 
 Repeatedly analyse games played until it finds move
-where it disagress with game move or abs(score)>2.0,
+where it disagress with game move or abs(score)>5.0,
 then score all positions including analysis of previous
 games at same time with one minmax search
 and (re)create opening book
