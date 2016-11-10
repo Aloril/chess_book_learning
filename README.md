@@ -1,7 +1,9 @@
 Chess book learning for any chess engine or human.
 
-Repeatedly analyse games played, score 
-all positions at same time with one minmax search
+Repeatedly analyse games played until it finds move
+where it disagress with game move or abs(score)>2.0,
+then score all positions including analysis of previous
+games at same time with one minmax search
 and (re)create opening book
 
 Analysis part currently tested only with Stockfish,
@@ -14,9 +16,11 @@ sudo apt-get install pychess
 
 
 tournamet.py: Will run tournament 2 games at time until
-file pause.flag is created in same directory.
+file pause.flag is created in same directory or 
+given number of rounds has been reached.
 Edit round.sh before running this.
-
+Example usage:
+tournamet.py 100
 
 book_learning.py: Used to create opening book from games played by engine or human.
 Example usage:

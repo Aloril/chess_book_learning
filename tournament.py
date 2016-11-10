@@ -7,11 +7,12 @@ from chess_utils import *
 BOOK_FILE = "book_learning.bin"
 
 if __name__=="__main__":
+    rounds = int(sys.argv[1])
     if not os.path.exists(BOOK_FILE):
         fp = open(BOOK_FILE, "w")
         fp.close()
     i = 0
-    while True:
+    while i<rounds:
         i += 1
         done_flag = False
         for filename_fmt in ("tournament%i_games2.pgn", "book_dict%i.dat",
@@ -23,7 +24,7 @@ if __name__=="__main__":
                 break
         if done_flag:
             continue
-        print_log("Round %i(%i):" % (i, i*2))
+        print_log("Round %i(%i)/%i(%i):" % (i, i*2, rounds, rounds*2))
         os.system("./round.sh %i" % i)
         print_log()
         print_log("@"*60)
