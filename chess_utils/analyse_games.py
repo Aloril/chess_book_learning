@@ -154,7 +154,7 @@ def analyse_pgn(pgn_name,
                     len(b.move_stack), game_moves, best_score/100.0, best_move,
                     ttable_count, everything_count, eval_count))
                 #print()
-                if abs(best_score) > 6.5:
+                if abs(best_score) > 650:
                     print_log("score differs too much from 0")
                     #print("@"*60)
                     print_log()
