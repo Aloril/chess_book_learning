@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-import sys
 import chess
-import chess_utils
-chess_utils.log_fp = open("tournament.log", "a")
 from chess_utils import *
 
-def show_book_line(b):
+def show_book_line(b, book_dict):
     score = None
     while True:
         key = fen2key(b.fen())
@@ -16,14 +13,14 @@ def show_book_line(b):
         b.push_uci(move)
     print_log("%s %s" % (" ".join(map(str, b.move_stack)), score))
 
-if __name__=="__main__":
-    book_dict = eval(open(sys.argv[1]).read())
+def best_book_line(book_dict_name, other_moves = ("e2e4", "d2d4")):
+    book_dict = eval(open(book_dict_name).read())
     b = chess.Board()
-    show_book_line(b)
+    show_book_line(b, book_dict)
     move1 = str(b.move_stack[0])
     #print("@"*60)
-    for move in ("e2e4", "d2d4"):
+    for move in other_moves:
         if move1!=move:
             b = chess.Board()
             b.push_uci(move)
-            show_book_line(b)
+            show_book_line(b, book_dict)

@@ -18,9 +18,14 @@ sudo apt-get install pychess
 tournamet.py: Will run tournament 2 games at time until
 file pause.flag is created in same directory or 
 given number of rounds has been reached.
-Edit round.sh before running this.
+Edit round.sh before running this or create bat file and give it as argument.
 Example usage:
-tournamet.py 100
+tournamet.py --name "Stockfish 8 Book learning" 100
+tourname.py will use book_learning.py to do analysing and book updating.
+
+tournamet.py --name "Stockfish 8 Book learning" --tournament_script round.bat 100
+Same as above, but instead of round.sh wll use round.bat (copy round.sh and modify it)
+
 
 book_learning.py: Used to create opening book from games played by engine or human.
 Example usage:

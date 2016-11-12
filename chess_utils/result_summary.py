@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 import sys, os, re
-import chess_utils
+from chess_utils import print_log
 
-if __name__=="__main__":
-    filename_fmt = sys.argv[1]
-    chess_utils.log_fp = open("tournament.log", "a")
-    print_log = chess_utils.print_log
+def result_summary(filename_fmt):
     i = 1
     total_win = total_lost = total_draw = 0
     while True:

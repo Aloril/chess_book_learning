@@ -36,6 +36,11 @@ def load_evaluations(filename):
     return d
 
 log_fp = None
+def init_log(logname):
+    global log_fp
+    if log_fp==None and logname:
+        log_fp = open(logname, "a")
+    
 def print_log(s=""):
     global log_fp
     if log_fp:

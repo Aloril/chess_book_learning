@@ -4,6 +4,7 @@ import chess.pgn
 
 if __name__=="__main__":
     name = sys.argv[1]
+    filename_fmt = sys.argv[2]
     for colour in chess.WHITE, chess.BLACK:
         if colour==chess.WHITE:
             print("White:")
@@ -11,7 +12,7 @@ if __name__=="__main__":
             print("Black:")
         i = 1
         while True:
-            filename = "tournament%i_games2.pgn" % i
+            filename = filename_fmt % i
             if not os.path.exists(filename):
                 break
             fp = open(filename)
@@ -43,10 +44,10 @@ if __name__=="__main__":
                     if comment.find("book")>=0:
                         move_postfix = "@"
                     if b.turn==chess.WHITE:
-                        print("%i." % (len(b.move_stack)//2+1,), end=" ")
+                        print("%i." % (len(b.move_stack)//2+1,), end="")
                     print("%-5s" % (b.san(move) + move_postfix,), end=" ")
                     b.push(move)
-                    if len(b.move_stack)>=22:
+                    if len(b.move_stack)>=17:
                         break
                     variation = variation[0].variations
                 print()
