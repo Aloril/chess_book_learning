@@ -1,13 +1,22 @@
 # -*- coding: utf-8 -*-
-import time
+import time, bz2, string
 
 PAUSE_FLAG = "pause.flag"
 GO_COMMAND = "go infinite"
 HASH_SIZE = 1024
-NODES = 10**6
+NODES = "1M"
 INFINITE_SCORE = 10**9
 MATE_SCORE = 10**6
 COUNTER_END = chr(27) + "[K\r"
+
+def nodes_str2nodes(nodes_str):
+    if nodes_str[-1] not in string.digits:
+        multiplier = {"k":10**3, "M":10**6, "G":10**9, "T":10**12}[nodes_str[-1]]
+        nodes_str = nodes_str[:-1]
+    else:
+        multiplier = 1
+    return int(nodes_str) * multiplier
+    
 
 def score2no(score_type, score):
     score = int(score)
@@ -25,7 +34,11 @@ def fen2key(fen):
 
 def load_evaluations(filename):
     d = {}
-    for line in open(filename):
+    if filename.endswith(".bz2"):
+        fp = bz2.open(filename, "rt")
+    else:
+        fp = open(filename)
+    for line in fp:
         key = fen2key(line)
         l = line.strip().split()
         fen = " ".join(l[:6])

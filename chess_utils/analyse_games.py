@@ -5,8 +5,9 @@ import chess.pgn
 from chess_utils import *
 
 class Engine:
-    def __init__(self, engine_executable, log_filename, syzygy_path):
+    def __init__(self, engine_executable, log_filename, syzygy_path, nodes):
         self.engine = subprocess.Popen([engine_executable], bufsize=1, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+        self.nodes = nodes
         if log_filename:
             self.log_out = open(log_filename, "a")
         else:
@@ -46,7 +47,7 @@ class Engine:
             if res.find("seldepth")>0 and res.find("bound")<0 and not stop_flag:
                 info = res
                 l = info.split()
-                if int(l[l.index("nodes")+1]) >= NODES or int(l[l.index("depth")+1])>=127:
+                if int(l[l.index("nodes")+1]) >= self.nodes or int(l[l.index("depth")+1])>=127:
                     self.write("stop\n")
                     stop_flag = True
             elif res.startswith("bestmove"):
@@ -60,12 +61,18 @@ class Engine:
                 pv = " ".join(info_lst[i+1:])
         return score_type, score, pv
 
+    def quit(self):
+        self.write("quit\n")
+        self.engine.wait()
+        
+
 def analyse_pgn(pgn_name,
                 engine_id,
                 evaluations_filename,
                 external_evaluations_filename,
                 engine_executable,
                 syzygy_path,
+                nodes,
                 engine_log_filename,
                 game_log_filename):
     print_log('analyse games from %s by "%s"' % (pgn_name, engine_id))
@@ -81,7 +88,7 @@ def analyse_pgn(pgn_name,
             len(existing_evaluations), evaluations_filename))
     else:
         existing_evaluations = {}
-    engine = Engine(engine_executable, engine_log_filename, syzygy_path)
+    engine = Engine(engine_executable, engine_log_filename, syzygy_path, nodes)
     eval_out = open(evaluations_filename, "a")
     game_log_out = open(game_log_filename, "a")
     eval_start_pos = eval_out.tell()
@@ -108,7 +115,10 @@ def analyse_pgn(pgn_name,
             continue
         count += 1
         print_log("%i: %s-%s %s" % (count, white, black, result))
-        b = chess.Board()
+        if "FEN" in game.headers:
+            b = chess.Board(game.headers["FEN"])
+        else:
+            b = chess.Board()
         variation = game.variations
         while True:
             best_move = None
@@ -179,5 +189,6 @@ def analyse_pgn(pgn_name,
         evaluations_filename, eval_start_pos, eval_out.tell(), eval_lines))
     print_log("%s size:%i->%i, %i lines written" % (
         game_log_filename, game_log_pos, game_log_out.tell(), game_log_lines))
+    engine.quit()
     
     return existing_evaluations

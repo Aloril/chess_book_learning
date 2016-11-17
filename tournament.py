@@ -60,7 +60,7 @@ if __name__=="__main__":
         args.engine_log = engine_log_fmt % i
         args.book_dict = book_dict_fmt % i
         do_book_learning(args)
-        best_book_line(args.book_dict)
+        best_book_line(args.book_dict, args.fen)
         
         print_log()
         print_log("@"*60)

@@ -17,8 +17,11 @@ def book_learning_args(parser, name_required=False):
     parser.add_argument('-x', '--engine_executable', default=DEFAULT_ENGINE_EXECUTABLE, help="Engine executable including path to it, default is "+DEFAULT_ENGINE_EXECUTABLE)
     parser.add_argument('-s', '--syzygy_path', default=DEFAULT_SYZYGY_PATH, help="SyzygyPath option for engine, default is "+DEFAULT_SYZYGY_PATH)
     parser.add_argument('-o', '--engine_log', help="Log file for engine input and output")
+    parser.add_argument('-m', '--nodes', default=chess_utils.NODES, help="Amount of nodes used in analysis, k/M/G/T accepted in addition to plain numbers, default is " + str(chess_utils.NODES))
     parser.add_argument('-g', '--game_log', default=DEFAULT_GAME_LOG, help="Moves from games analysed, append if already exists, default is "+DEFAULT_GAME_LOG)
     parser.add_argument('-d', '--book_dict', help="Python version of book dictionary")
+    parser.add_argument('-f', '--fen', help="Start book building from this position, default is standard starting position")
+    parser.add_argument('-i', '--fixed_lines', help="Fixed opening lines that won't be altered")
     parser.add_argument('-b', '--book', default=DEFAULT_BOOK, help="Polyglot book, will overwrite if exists, default is "+DEFAULT_BOOK)
     parser.add_argument('-l', '--log', help="Log file")
 
@@ -29,7 +32,8 @@ def do_book_learning(args):
         analyse_pgn(args.pgn, args.name,
                     args.evaluations, args.external_evaluations,
                     args.engine_executable, args.syzygy_path,
+                    chess_utils.nodes_str2nodes(args.nodes),
                     args.engine_log, args.game_log)
     
-    book_dict = build_book(args.evaluations, args.game_log, args.book_dict)
-    dict2polyglot(book_dict, args.book)
+    book_dict = build_book(args.evaluations, args.game_log, args.book_dict, args.fen)
+    dict2polyglot(book_dict, args.book, args.fen, args.fixed_lines)

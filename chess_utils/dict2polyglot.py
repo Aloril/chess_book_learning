@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import struct
+from copy import copy
 import chess.polyglot
 from chess_utils import *
 
@@ -9,7 +10,31 @@ castling2chess960 = {chess.G1: chess.H1,
                      chess.G8: chess.H8,
                      chess.C8: chess.A8}
 
-def dict2polyglot(book_dict, book_filename):
+def dict2polyglot(book_dict, book_filename, fen=None, fixed_lines=None):
+    fixed_positions = {}
+    if fixed_lines:
+        if not fen:
+            fen = chess.STARTING_FEN
+        book_dict = copy(book_dict)
+        fixed_lines_count = 0
+        fixed_lines_pos_count = 0
+        for line in open(fixed_lines):
+            fixed_lines_count += 1
+            move_lst = line.strip().split()
+            colour = move_lst[0]
+            if colour=="w":
+                colour = chess.WHITE
+            else:
+                colour = chess.BLACK
+            move_lst = move_lst[1:]
+            b = chess.Board(fen)
+            for move in move_lst:
+                if b.turn==colour:
+                    key = fen2key(b.fen())
+                    book_dict[key] = 1, move, 1000
+                    fixed_lines_pos_count += 1
+                b.push_uci(move)
+        print_log("fixed lines: %i, pos: %i" % (fixed_lines_count, fixed_lines_pos_count))
     book_lst = []
     for key in book_dict:
         score, move, all_moves = book_dict[key]
@@ -24,12 +49,11 @@ def dict2polyglot(book_dict, book_filename):
             move_raw = (move_from << 6) | move_to
             if move.promotion:
                 move_raw |= (move.promotion-1) << 12
-            book_lst.append((zhash, move_raw, score))
+            book_lst.append((zhash, move_raw, all_moves, score))
     book_lst.sort()
     count = 0
     with open(book_filename, "wb") as fp:
-        for zhash, move, score in book_lst:
-            weight = 1
+        for zhash, move, weight, score in book_lst:
             learn = score
             fp.write(ENTRY_STRUCT.pack(zhash, move, weight, learn))
             count += 1

@@ -26,6 +26,12 @@ tourname.py will use book_learning.py to do analysing and book updating.
 tournamet.py --name "Stockfish 8 Book learning" --tournament_script round.bat 100
 Same as above, but instead of round.sh wll use round.bat (copy round.sh and modify it)
 
+tournamet.py --name "Stockfish 8 Book learning" --fen "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2"
+Will start from specified fen. In round.sh add -pgnin file_where_above_fen_is_in_header_and_no_moves.pgn
+
+tournamet.py --name "Stockfish 8 Book learning" --nodes 10M
+Will use use 10x more nodes in analysis than default 1M setting.
+
 
 book_learning.py: Used to create opening book from games played by engine or human.
 Example usage:
@@ -33,6 +39,12 @@ book_learning.py --pgn some_tournament.pgn --name "Stockfish 8 Book learning"
 This will analyse positions by player named "Stockfish 8 Book learning" until it
 disagrees or absolute score becomes too big. Evaluations are stored in evaluations.pos
 and games in game.log . Book is stored in book_learning.bin .
+
+book_learning.py --pgn some_tournament.pgn --name "Stockfish 8 Book learning" --fen "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2"
+Will start from specified fen.
+
+book_learning.py --pgn some_tournament.pgn --name "Stockfish 8 Book learning" --nodes 10M
+Will use use 10x more nodes in analysis than default 1M setting.
 
 book_learning.py --help
 will display help message with all options

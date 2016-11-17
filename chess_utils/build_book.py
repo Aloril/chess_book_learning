@@ -43,14 +43,16 @@ def minmax(existing_evaluations, book_dict, link_dict, key, move_history):
         book_dict[key] = result
         return result
 
-def build_book(evaluations_filename, game_log_filename, book_dict_filename):
+def build_book(evaluations_filename, game_log_filename, book_dict_filename, fen):
+    if not fen:
+        fen = chess.STARTING_FEN
     existing_evaluations = load_evaluations(evaluations_filename)
     print_log("%i evaluations loaded" % (len(existing_evaluations),))
     minmax_positions = {}
     link_dict = {}
     for line in open(game_log_filename):
         move_lst = line.strip().split()
-        b = chess.Board()
+        b = chess.Board(fen)
         for move in move_lst:
             if len(move) >= 4: #first entry is colour, but ignore it and analyse opening position
                 b.push_uci(move)
@@ -65,7 +67,7 @@ def build_book(evaluations_filename, game_log_filename, book_dict_filename):
     print_log("%i links created" % (len(link_dict),))
     book_dict = {}
     move_history = set()
-    minmax(existing_evaluations, book_dict, link_dict, fen2key(chess.STARTING_FEN), move_history)
+    minmax(existing_evaluations, book_dict, link_dict, fen2key(fen), move_history)
     print_log("%i book entries created" % (len(book_dict),))
     if book_dict_filename:
         fp = open(book_dict_filename, "w")
